@@ -1,0 +1,4 @@
+; Global namespace
+assume_php = false
+allowed_decl_fixme_codes = 2053
+allowed_fixme_codes_strict = 2053,4110

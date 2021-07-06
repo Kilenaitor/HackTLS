@@ -1,0 +1,15 @@
+{
+    "name": "kilenaitor/hack-tls",
+    "description": "TLS 1.3 Library for Hack+HHVM",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kyle Minshall",
+            "email": "kyleminshall@gmail.com"
+        }
+    ],
+    "require": {
+        "hhvm/hhvm-autoload": "^3.2"
+    }
+}
