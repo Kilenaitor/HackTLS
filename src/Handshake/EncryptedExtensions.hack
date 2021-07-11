@@ -23,6 +23,7 @@ final class EncryptedExtensions extends BaseHandshake {
       $version === "\x03\x03",
       'Recevied a handshake version other than TLS 1.2',
     );
+    return $instance;
   }
 
   <<__Memoize>>

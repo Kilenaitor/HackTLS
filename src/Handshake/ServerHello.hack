@@ -14,10 +14,7 @@ final class ServerHello extends BaseHandshake {
   }
 
   public function pack(): void {
-    invariant(
-      !$this->ready,
-      'This payload has already been packed.'
-    );
+    invariant(!$this->ready, 'This payload has already been packed.');
     $this->ready = true;
   }
 
@@ -86,8 +83,10 @@ final class ServerHello extends BaseHandshake {
 
     foreach ($extensions as $extension) {
       if ($extension['type'] === ExtensionType::KEY_SHARE) {
-        $server_public_key =
-          Shapes::at($extension['parsed_payload'], 'public_key') as string;
+        $server_public_key = Shapes::at(
+          $extension['parsed_payload'],
+          'public_key',
+        ) as string;
         Auth::setServerPublicKey($server_public_key);
       }
     }

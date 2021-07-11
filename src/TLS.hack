@@ -6,11 +6,7 @@ async function connect_async(
   string $host,
   TCP\ConnectOptions $opts = shape(),
 ): Awaitable<CloseableSocket> {
-  $socket = await TCP\connect_async(
-    $host,
-    443,
-    $opts
-  );
+  $socket = await TCP\connect_async($host, 443, $opts);
 
   echo "Going to say hello to:\n$host\n\n";
 
@@ -22,8 +18,9 @@ async function connect_async(
   );
 
   $payload_length = Str\length($client_hello_payload);
-  $bytes_written =
-    await $socket->writeAllowPartialSuccessAsync($client_hello_payload);
+  $bytes_written = await $socket->writeAllowPartialSuccessAsync(
+    $client_hello_payload,
+  );
   if ($bytes_written !== $payload_length) {
     \die('Unable to write message to socket');
   }
@@ -44,27 +41,12 @@ async function connect_async(
 
   // After ServerHello and ChangeCipherSpec it's all ApplicationData
   $application_data_records = Vec\drop($records, 2);
-  \print_r($application_data_records);
   foreach ($application_data_records as $encrypted_application_data) {
     $application_data = Crypto::get()->decryptApplicationData(
       $encrypted_application_data,
     );
     echo "Decrypted Wrapper:\n".\bin2hex($application_data)."\n\n";
   }
-
-  // Next handshake is Application Data
-  $application_data_encrypted = $records[2];
-  $application_data = Crypto::get()->decryptApplicationData(
-    $application_data_encrypted,
-  );
-
-  // Yay. We've successfully established a shared secret and decrypted
-  // the application data payload. Next up is certificate verification
-  // and then one more set of keys to compute.
-
-  // 08 00 00 06 00 04 00 00 00 00
-
-  echo "Decrypted Wrapper:\n".\bin2hex($application_data)."\n\n";
 
   die();
 

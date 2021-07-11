@@ -39,18 +39,19 @@ abstract final class HKDF {
 
     $okm = '';
     for (
-      $key_block = '', $block_index = 1;
+      $key_block = '',
+      $block_index = 1;
       Str\length($okm) < $length;
       $block_index++
     ) {
-			$key_block = \hash_hmac(
+      $key_block = \hash_hmac(
         $algorithm,
         $key_block.$info.\chr($block_index),
         $secret,
         true, // raw_output
       );
-			$okm .= $key_block;
-		}
+      $okm .= $key_block;
+    }
     return Str\slice($okm, 0, $length);
   }
 
@@ -68,15 +69,11 @@ abstract final class HKDF {
     }
 
     $label = "tls13 $label";
-    $info = \pack('n', $length)
-      . \pack('C', Str\length($label)).$label
-      . \pack('C', Str\length($info)).$info;
-    return self::expand(
-      $algorithm,
-      $secret,
-      $length,
-      $info,
-      $salt,
-    );
+    $info = \pack('n', $length).
+      \pack('C', Str\length($label)).
+      $label.
+      \pack('C', Str\length($info)).
+      $info;
+    return self::expand($algorithm, $secret, $length, $info, $salt);
   }
 }

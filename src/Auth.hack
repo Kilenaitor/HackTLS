@@ -29,9 +29,7 @@ abstract final class Auth {
     return self::$clientPublicKey as nonnull;
   }
 
-  public static function setServerPublicKey(
-    string $public_key,
-  ): void {
+  public static function setServerPublicKey(string $public_key): void {
     self::$serverPublicKey = $public_key;
   }
 

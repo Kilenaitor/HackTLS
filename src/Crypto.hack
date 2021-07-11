@@ -6,6 +6,8 @@ final class Crypto {
 
   private static ?Crypto $instance;
 
+  const IV_LENGTH = 12;
+
   private ?string $sharedSecret;
   private ?string $clientHandshakeKey;
   private ?string $clientHandshakeIV;
@@ -121,11 +123,7 @@ final class Crypto {
       'Tried to decrypt payload before key exchange finished'
     );
 
-    $server_handshake_iv = $this->serverHandshakeIV;
-    invariant(
-      $server_handshake_iv is nonnull,
-      'Tried to decrypt payload before key exchange finished',
-    );
+    $server_handshake_iv = $this->getServerHandshakeIV();
 
     $wrapper = $application_data['payload'];
     $payload_length = Str\length($wrapper);
@@ -147,6 +145,24 @@ final class Crypto {
     invariant($decrypted_wrapper !== false, 'Failed to decrypt server payload');
 
     return $decrypted_wrapper;
+  }
+
+  private function getServerHandshakeIV(): string {
+    $server_handshake_iv = $this->serverHandshakeIV;
+    invariant(
+      $server_handshake_iv is nonnull,
+      'Tried to decrypt payload before key exchange finished',
+    );
+
+    for ($i = 0; $i < 8; $i++) {
+      $server_handshake_iv[self::IV_LENGTH - 1 - $i] = \chr(
+        \ord($server_handshake_iv[self::IV_LENGTH - 1 - $i]) ^
+          (($this->timesDecrypted >> ($i * 8)) & 0xFF),
+      );
+    }
+
+    $this->timesDecrypted++;
+    return $server_handshake_iv;
   }
 
   // TODO: Need to xor the IV every time we use it to decode a payload

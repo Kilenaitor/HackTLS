@@ -3,9 +3,7 @@ namespace TLS;
 use namespace HH\Lib\TCP;
 
 final class CloseableSocket {
-  public function __construct(
-    private TCP\CloseableSocket $socket,
-  ) {}
+  public function __construct(private TCP\CloseableSocket $socket) {}
 
   public async function writeAllAsync(
     string $data,
@@ -18,10 +16,8 @@ final class CloseableSocket {
     string $bytes,
     ?int $timeout_ns = null,
   ): Awaitable<int> {
-    return await $this->socket->writeAllowPartialSuccessAsync(
-      $bytes,
-      $timeout_ns,
-    );
+    return await $this->socket
+      ->writeAllowPartialSuccessAsync($bytes, $timeout_ns);
   }
 
   public async function readAllAsync(

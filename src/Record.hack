@@ -14,9 +14,7 @@ abstract final class Record {
    * Some records are sent back-to-back. Convenience function to take
    * an arbitrary number of concatenated records and split them up.
    */
-  public static function splitAll(
-    string $raw_payload,
-  ): vec<self::TRecord> {
+  public static function splitAll(string $raw_payload): vec<self::TRecord> {
     $records = vec[];
     while (!Str\is_empty($raw_payload)) {
       $header = Str\slice($raw_payload, 0, 5);
@@ -41,15 +39,13 @@ abstract final class Record {
     TLSVersion $version,
     string $payload,
   ): string {
-    return \pack('C', $type)
-      . \pack('n', $version)
-      . \pack('n', Str\length($payload))
-      . $payload;
+    return \pack('C', $type).
+      \pack('n', $version).
+      \pack('n', Str\length($payload)).
+      $payload;
   }
 
-  public static function stripHeader(
-    string $payload,
-  ): string {
+  public static function stripHeader(string $payload): string {
     return Str\slice($payload, 5);
   }
 }

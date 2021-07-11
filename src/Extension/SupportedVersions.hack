@@ -22,10 +22,7 @@ abstract final class SupportedVersions extends BaseExtension {
     $payload = Str\slice($payload, 2);
 
     $version = Str\slice($payload, 0, 2);
-    invariant(
-      $version === "\x03\x04",
-      'Supported Version must equal TLS v1.3',
-    );
+    invariant($version === "\x03\x04", 'Supported Version must equal TLS v1.3');
 
     return shape(
       'type' => ExtensionType::SUPPORTED_VERSIONS,

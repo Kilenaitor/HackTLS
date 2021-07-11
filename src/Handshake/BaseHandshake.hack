@@ -16,7 +16,7 @@ abstract class BaseHandshake implements IHandshake {
   final public static function unpack(Record::TRecord $record): this {
     invariant(
       $record['type'] === RecordType::HANDSHAKE,
-      'Recevied non-handshake payload'
+      'Recevied non-handshake payload',
     );
 
     $handshake_header = Str\slice($record['payload'], 0, 4);

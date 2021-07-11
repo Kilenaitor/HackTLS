@@ -3,7 +3,7 @@ async function main(): Awaitable<void> {
   require('vendor/autoload.hack');
   \Facebook\AutoloadMap\initialize();
 
-  $socket = await TLS\connect_async('apple.com');
+  $socket = await TLS\connect_async('gateway.discord.gg');
 
   $nonce = HH\Lib\SecureRandom\string(20) |> base64_encode($$);
   $request = <<<EOF
